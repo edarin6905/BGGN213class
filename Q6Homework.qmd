@@ -1,0 +1,77 @@
+---
+title: "Class05_hwQ6_Darin"
+author: "Emily Darin"
+format: pdf
+---
+Loading R package bio3d
+
+```{r}
+library(bio3d)
+```
+
+```{r}
+s1 <- read.pdb("4AKE")  # kinase with drug
+s2 <- read.pdb("1AKE")  # kinase no drug
+s3 <- read.pdb("1E4Y")  # kinase with drug
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+```
+
+
+>What type of object is returned from the read.pdb() function?
+
+A summary of infomation PDB file with 8 elements. 
+
+>Q2. What does the trim.pdb() function do?
+
+Makes a smaller pdb object with a subset of atoms from the larger pdb object
+
+>3 What input parameter would turn off the marginal black and grey rectangles in the plots and what do they represent in this case?
+
+"sse=NULL" would turn off the black a grey rectangles and the represent the protein chain. 
+ 
+```{r}
+plotb3(s1.b, sse=NULL, typ="l", ylab="Bfactor")
+```
+ 
+>Q4. What would be a better plot to compare across the different proteins?
+
+A cluster dendrogram would probably be better because it would show you how related the structure of the idfferent proteins are. 
+
+>Q5. Which proteins are more similar to each other in their B-factor trends. How could you quantify this?
+
+S1 and S3 are more similar to eachother than s2 for the b factor chains
+
+```{r}
+hc <- hclust( dist( rbind(s1.b, s2.b, s3.b) ) )
+plot(hc)
+```
+
+>Q6. How would you generalize the original code above to work with any set of input
+protein structures?
+
+First I would create my function that would allow this to be made using any protein. 
+
+```{r}
+
+ pdb <- function(X){
+ trim.pdb(X, chain="A", elety="CA") #trims pdb 
+ X$atom$b #Calls atoms 
+ plotb3(X, sse=s1.chainA, typ="l", ylab="Bfactor") #plots 
+  }
+
+
+
+
+
+
+```
+
+
